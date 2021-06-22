@@ -3,8 +3,21 @@ import "./App.css";
 
 function App() {
   const [text, setText] = useState("");
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(3);
   const [running, setrunning] = useState(false);
+  const [wordCount, setWordCount] = useState(0);
+
+  const reStart = () => {
+    setrunning(true);
+    setTimer(5);
+    setWordCount(0);
+    setText("");
+  };
+
+  const endGame = () => {
+    setrunning(false);
+    handleCount();
+  };
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -13,37 +26,37 @@ function App() {
   const handleCount = (e) => {
     const wordsArr = text.trim().split(" ");
     const filteredWords = wordsArr.filter((word) => word !== "");
-    console.log(filteredWords.length);
+    setWordCount(filteredWords.length);
   };
 
   function tick() {
-    setTimer((prevCount) =>
-      prevCount === 0 ? (running = false) : prevCount - 1
-    );
+    setTimer((prevCount) => prevCount - 1);
   }
 
   useEffect(() => {
     if (running && timer > 0) {
       setTimeout(tick, 1000);
-    } else if(timer === 0){
-      setrunning(false);
+    } else if (timer === 0) {
+      endGame();
     }
   }, [timer, running]);
 
   return (
     <div className="App">
       <h1>How fast do you type?</h1>
-      <textarea value={text} onChange={handleChange}></textarea>
+      <textarea disabled={!running} value={text} onChange={handleChange}></textarea>
       <p>Time remaining: {timer}</p>
       <button
+        disabled={running}
         onClick={() => {
           setrunning(true);
-          console.log(running);
+          console.log(setrunning);
+          reStart();
         }}
       >
         START
       </button>
-      <h1>WORD COUNT {}</h1>
+      <h1>WORD COUNT {wordCount === 0 ? "??" : wordCount}</h1>
     </div>
   );
 }
