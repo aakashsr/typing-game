@@ -4,6 +4,7 @@ import "./App.css";
 function App() {
   const [text, setText] = useState("");
   const [timer, setTimer] = useState(10);
+  const [running, setrunning] = useState(false);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -16,24 +17,32 @@ function App() {
   };
 
   function tick() {
-    setTimer((prevCount) => (prevCount !== 0 ? prevCount - 1 : 0));
+    setTimer((prevCount) =>
+      prevCount === 0 ? (running = false) : prevCount - 1
+    );
   }
 
   useEffect(() => {
-    const interval = setTimeout(tick, 1000);
+    if (running && timer > 0) {
+      setTimeout(tick, 1000);
+    } else if(timer === 0){
+      setrunning(false);
+    }
+  }, [timer, running]);
 
-    return () => {
-      clearInterval(interval);
-    };
-  }, [timer]);
-
-  console.log(text);
   return (
     <div className="App">
       <h1>How fast do you type?</h1>
       <textarea value={text} onChange={handleChange}></textarea>
       <p>Time remaining: {timer}</p>
-      <button onClick={handleCount}>START</button>
+      <button
+        onClick={() => {
+          setrunning(true);
+          console.log(running);
+        }}
+      >
+        START
+      </button>
       <h1>WORD COUNT {}</h1>
     </div>
   );
