@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 function App() {
   const [text, setText] = useState("");
-  const [timer, setTimer] = useState(3);
+  const [timer, setTimer] = useState(5);
   const [running, setrunning] = useState(false);
   const [wordCount, setWordCount] = useState(0);
+  const textareaRef = useRef();
 
   const reStart = () => {
     setrunning(true);
     setTimer(5);
     setWordCount(0);
     setText("");
+    textareaRef.current.disabled = false; // as wet running setState is asynchronous task , before "running" becomes "true" , last two lines of "restat" function will get executed.
+    textareaRef.current.focus();
   };
 
   const endGame = () => {
@@ -44,13 +47,16 @@ function App() {
   return (
     <div className="App">
       <h1>How fast do you type?</h1>
-      <textarea disabled={!running} value={text} onChange={handleChange}></textarea>
+      <textarea
+        ref={textareaRef}
+        disabled={!running}
+        value={text}
+        onChange={handleChange}
+      ></textarea>
       <p>Time remaining: {timer}</p>
       <button
         disabled={running}
         onClick={() => {
-          setrunning(true);
-          console.log(setrunning);
           reStart();
         }}
       >
