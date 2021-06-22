@@ -3,7 +3,7 @@ import "./App.css";
 
 function App() {
   const [text, setText] = useState("");
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(10);
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -12,18 +12,11 @@ function App() {
   const handleCount = (e) => {
     const wordsArr = text.trim().split(" ");
     const filteredWords = wordsArr.filter((word) => word !== "");
-    return filteredWords.length;
+    console.log(filteredWords.length);
   };
 
   function tick() {
-    console.log('ticking');
-    setTimer((prevCount) => {
-      if (prevCount !== 0) {
-        return prevCount - 1;
-      } else {
-        return 0;
-      }
-    });
+    setTimer((prevCount) => (prevCount !== 0 ? prevCount - 1 : 0));
   }
 
   useEffect(() => {
@@ -32,7 +25,7 @@ function App() {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [timer]);
 
   console.log(text);
   return (
@@ -41,6 +34,7 @@ function App() {
       <textarea value={text} onChange={handleChange}></textarea>
       <p>Time remaining: {timer}</p>
       <button onClick={handleCount}>START</button>
+      <h1>WORD COUNT {}</h1>
     </div>
   );
 }
